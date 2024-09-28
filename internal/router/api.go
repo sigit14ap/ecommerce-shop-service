@@ -10,7 +10,7 @@ import (
 func NewRouter(shopHandler *delivery.ShopHandler) *gin.Engine {
 	router := gin.New()
 
-	v1 := router.Group("/api/v1/shop")
+	v1 := router.Group("/api/v1/shop").Use(middleware.ServiceMiddleware())
 	{
 		v1.POST("/register", shopHandler.Register)
 		v1.POST("/login", shopHandler.Login)

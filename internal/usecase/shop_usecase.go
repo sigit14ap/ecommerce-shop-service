@@ -25,9 +25,9 @@ func NewShopUsecase(shopRepo repository.ShopRepository) ShopUsecase {
 	}
 }
 
-func (service *shopUsecase) Register(email string, name string, password string) error {
+func (uc *shopUsecase) Register(email string, name string, password string) error {
 
-	_, err := service.shopRepository.GetShopByEmail(email)
+	_, err := uc.shopRepository.GetShopByEmail(email)
 	if err == nil {
 		return errors.New("email already registered")
 	}
@@ -43,14 +43,14 @@ func (service *shopUsecase) Register(email string, name string, password string)
 		Password: string(hashedPassword),
 	}
 
-	return service.shopRepository.CreateShop(shop)
+	return uc.shopRepository.CreateShop(shop)
 }
 
-func (service *shopUsecase) Login(email string, password string) (string, error) {
+func (uc *shopUsecase) Login(email string, password string) (string, error) {
 	var shop *domain.Shop
 	var err error
 
-	shop, err = service.shopRepository.GetShopByEmail(email)
+	shop, err = uc.shopRepository.GetShopByEmail(email)
 
 	if err != nil {
 		return "", err
@@ -70,8 +70,8 @@ func (service *shopUsecase) Login(email string, password string) (string, error)
 	return token, nil
 }
 
-func (service *shopUsecase) Me(id uint64) (*domain.Shop, error) {
-	shop, err := service.shopRepository.GetShopById(id)
+func (uc *shopUsecase) Me(id uint64) (*domain.Shop, error) {
+	shop, err := uc.shopRepository.GetShopById(id)
 
 	if err != nil {
 		return nil, err
