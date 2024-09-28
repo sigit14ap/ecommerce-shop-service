@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	helpers "github.com/sigit14ap/shop-service/helpers"
-	"github.com/sigit14ap/shop-service/internal/services"
+	"github.com/sigit14ap/shop-service/internal/usecase"
 )
 
 type ShopHandler struct {
-	shopService services.ShopService
+	shopUsecase usecase.ShopUsecase
 }
 
 type LoginRequest struct {
@@ -26,8 +26,8 @@ type RegisterRequest struct {
 
 var validate *validator.Validate
 
-func NewShopHandler(shopService services.ShopService) *ShopHandler {
-	return &ShopHandler{shopService: shopService}
+func NewShopHandler(shopUsecase usecase.ShopUsecase) *ShopHandler {
+	return &ShopHandler{shopUsecase: shopUsecase}
 }
 
 func (handler *ShopHandler) Register(context *gin.Context) {
@@ -45,7 +45,7 @@ func (handler *ShopHandler) Register(context *gin.Context) {
 		return
 	}
 
-	err = handler.shopService.Register(registerRequest.Email, registerRequest.Name, registerRequest.Password)
+	err = handler.shopUsecase.Register(registerRequest.Email, registerRequest.Name, registerRequest.Password)
 	if err != nil {
 		helpers.ErrorResponse(context, http.StatusBadRequest, err.Error())
 		return
@@ -69,7 +69,7 @@ func (handler *ShopHandler) Login(context *gin.Context) {
 		return
 	}
 
-	token, err := handler.shopService.Login(loginRequest.Email, loginRequest.Password)
+	token, err := handler.shopUsecase.Login(loginRequest.Email, loginRequest.Password)
 	if err != nil {
 		helpers.ErrorResponse(context, http.StatusUnauthorized, "Email or password are incorrect")
 		return
@@ -92,7 +92,7 @@ func (handler *ShopHandler) Me(context *gin.Context) {
 		return
 	}
 
-	shop, err := handler.shopService.Me(shopIdUint)
+	shop, err := handler.shopUsecase.Me(shopIdUint)
 	if err != nil {
 		helpers.ErrorResponse(context, http.StatusUnauthorized, "Shop data not found")
 		return

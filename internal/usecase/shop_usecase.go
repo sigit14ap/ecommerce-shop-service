@@ -1,4 +1,4 @@
-package services
+package usecase
 
 import (
 	"errors"
@@ -9,23 +9,23 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type ShopService interface {
+type ShopUsecase interface {
 	Register(email string, name string, password string) error
 	Login(email string, password string) (string, error)
 	Me(id uint64) (*domain.Shop, error)
 }
 
-type shopService struct {
+type shopUsecase struct {
 	shopRepository repository.ShopRepository
 }
 
-func NewShopService(shopRepo repository.ShopRepository) ShopService {
-	return &shopService{
+func NewShopUsecase(shopRepo repository.ShopRepository) ShopUsecase {
+	return &shopUsecase{
 		shopRepository: shopRepo,
 	}
 }
 
-func (service *shopService) Register(email string, name string, password string) error {
+func (service *shopUsecase) Register(email string, name string, password string) error {
 
 	_, err := service.shopRepository.GetShopByEmail(email)
 	if err == nil {
@@ -46,7 +46,7 @@ func (service *shopService) Register(email string, name string, password string)
 	return service.shopRepository.CreateShop(shop)
 }
 
-func (service *shopService) Login(email string, password string) (string, error) {
+func (service *shopUsecase) Login(email string, password string) (string, error) {
 	var shop *domain.Shop
 	var err error
 
@@ -70,7 +70,7 @@ func (service *shopService) Login(email string, password string) (string, error)
 	return token, nil
 }
 
-func (service *shopService) Me(id uint64) (*domain.Shop, error) {
+func (service *shopUsecase) Me(id uint64) (*domain.Shop, error) {
 	shop, err := service.shopRepository.GetShopById(id)
 
 	if err != nil {

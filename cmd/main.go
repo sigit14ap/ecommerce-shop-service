@@ -10,7 +10,7 @@ import (
 	"github.com/sigit14ap/shop-service/internal/domain"
 	repository "github.com/sigit14ap/shop-service/internal/repository/mysql"
 	"github.com/sigit14ap/shop-service/internal/router"
-	"github.com/sigit14ap/shop-service/internal/services"
+	"github.com/sigit14ap/shop-service/internal/usecase"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -46,7 +46,7 @@ func main() {
 	}
 
 	shopRepo := repository.NewShopRepository(db)
-	shopService := services.NewShopService(shopRepo)
+	shopService := usecase.NewShopUsecase(shopRepo)
 	shopHandler := delivery.NewShopHandler(shopService)
 
 	router := router.NewRouter(shopHandler)
