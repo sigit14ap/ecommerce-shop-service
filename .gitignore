@@ -1,0 +1,6 @@
+# dotenv environment variable files
+.env
+
+# temp directory
+.temp
+.tmp
