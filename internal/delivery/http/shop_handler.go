@@ -6,22 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	helpers "github.com/sigit14ap/shop-service/helpers"
+	"github.com/sigit14ap/shop-service/internal/delivery/dto"
 	"github.com/sigit14ap/shop-service/internal/usecase"
 )
 
 type ShopHandler struct {
 	shopUsecase usecase.ShopUsecase
-}
-
-type LoginRequest struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=8"`
-}
-
-type RegisterRequest struct {
-	Name     string `json:"name" validate:"required"`
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=8"`
 }
 
 var validate *validator.Validate
@@ -32,7 +22,7 @@ func NewShopHandler(shopUsecase usecase.ShopUsecase) *ShopHandler {
 
 func (handler *ShopHandler) Register(context *gin.Context) {
 	validate = validator.New()
-	var registerRequest RegisterRequest
+	var registerRequest dto.RegisterRequest
 	err := context.BindJSON(&registerRequest)
 	if err != nil {
 		helpers.ErrorResponse(context, http.StatusBadRequest, err.Error())
@@ -56,7 +46,7 @@ func (handler *ShopHandler) Register(context *gin.Context) {
 
 func (handler *ShopHandler) Login(context *gin.Context) {
 	validate = validator.New()
-	var loginRequest LoginRequest
+	var loginRequest dto.LoginRequest
 	err := context.BindJSON(&loginRequest)
 	if err != nil {
 		helpers.ErrorResponse(context, http.StatusBadRequest, err.Error())
